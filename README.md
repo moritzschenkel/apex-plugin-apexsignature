@@ -8,9 +8,11 @@ It is based on JS Framework Signature Pad (https://github.com/szimek/signature_p
 
 ## Changelog
 
-#### 1.2   - Updated signature_pad to v5.0.2
-####       - Added Image Format support (JPEG / PNG for now)
-####       - Upgraded to Apex 23.2.2
+#### 1.2 - updates + fixes
+  - Updated signature_pad to v5.0.2
+  - Added Image Format support (JPEG / PNG for now)
+  - Upgraded to Apex 23.2.2
+  - Fixed the null problem in martindsouza's pull request which fixed issue #13
 
 #### 1.1 - Added optional WaitSpinner when saving image into database
 
