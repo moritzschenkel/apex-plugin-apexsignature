@@ -71,16 +71,17 @@ var apexSignature = {
         var vMaxWidth = parseInt(vOptions.lineMaxWidth);
         var vClearBtnSelector = vOptions.clearButton;
         var vSaveBtnSelector = vOptions.saveButton;
-        var vEmptyAlert = vOptions.emptyAlert;
+        var vEmptyAlert = vOptions.emptyAlert;										  
         var vShowSpinner = apexSignature.parseBoolean(vOptions.showSpinner);
         var vCanvasWidth = vCanvas$.width;
         var vCanvasHeight = vCanvas$.height;
         var vClientWidth = parseInt(document.documentElement.clientWidth);
         var vCientHeight = parseInt(document.documentElement.clientHeight);
+        var vTrimCanvas = apexSignature.parseBoolean(vOptions.trimCanvas);
         var vImageFormat = vOptions.imageFormat;
         // jpeg doesn't support transparent backgrounds. So we change it back to rgb if rgba is set.
         var vBackgroundColor = (vImageFormat == "image/jpeg") ? vOptions.backgroundColor.replace("rgba","rgb").replace(/,(\d+(\.\d+)?\))$/, ')') : vOptions.backgroundColor;
-        
+
         // Logging
         if (vLogging) {
             console.log('apexSignatureFnc: vOptions.ajaxIdentifier:', vOptions.ajaxIdentifier);
@@ -99,6 +100,7 @@ var apexSignature = {
             console.log('apexSignatureFnc: vCanvasHeight:', vCanvasHeight);
             console.log('apexSignatureFnc: vClientWidth:', vClientWidth);
             console.log('apexSignatureFnc: vCientHeight:', vCanvasHeight);
+            console.log('apexSignatureFnc: vTrimCanvas:', vTrimCanvas);
             console.log('apexSignatureFnc: vImageFormat:', vImageFormat);
         }
         // resize canvas if screen smaller than canvas
@@ -125,6 +127,7 @@ var apexSignature = {
         // save signaturePad to DB
         $(vSaveBtnSelector).click(function() {
             var vIsEmpty = signaturePad.isEmpty();
+			
             // only when signature is not empty
             if (vIsEmpty === false) {
                 // show wait spinner
@@ -133,12 +136,20 @@ var apexSignature = {
                 }
                 // save image
                 var vImg;
-                if (vImageFormat == "image/jpeg") {
-                    vImg = signaturePad.toDataURL(vImageFormat);
+                if (vTrimCanvas) {
+                    if (vImageFormat == "image/jpeg") {
+                        vImg = signaturePad.trimWhitespace(vImageFormat);
+                    } else {
+                        vImg = signaturePad.trimWhitespace();
+                    }
                 } else {
-                    vImg = signaturePad.toDataURL();
+                    if (vImageFormat == "image/jpeg") {
+                        vImg = signaturePad.toDataURL(vImageFormat);
+                    } else {
+                        vImg = signaturePad.toDataURL();
+                    }
                 }
-                
+                  
                 apexSignature.save2Db(vOptions, pRegionId, vImg, function() {
                     // clear
                     signaturePad.clear();

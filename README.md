@@ -13,6 +13,7 @@ It is based on JS Framework Signature Pad (https://github.com/szimek/signature_p
   - Added Image Format support (JPEG / PNG for now)
   - Upgraded to Apex 23.2.2
   - Fixed the null problem in martindsouza's pull request which fixed issue #13
+  - Added the functionality to remove whitespace from the signature. Note that, for now, when using JPEG format only a white background is supported
 
 #### 1.1 - Added optional WaitSpinner when saving image into database
 

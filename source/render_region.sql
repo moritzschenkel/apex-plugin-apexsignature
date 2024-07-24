@@ -21,6 +21,7 @@ FUNCTION render_apexsignature(p_region              IN apex_plugin.t_region,
   l_alert_text         VARCHAR2(200) := p_region.attribute_11;
   l_show_spinner       VARCHAR2(50) := p_region.attribute_12;
   l_image_format       VARCHAR2(50) := p_region.attribute_13;
+  l_trim_canvas        VARCHAR2(50) := p_region.attribute_14;
 
   -- other variables
   l_region_id              VARCHAR2(200);
@@ -54,6 +55,8 @@ BEGIN
                         'false');
   l_show_spinner := nvl(l_show_spinner,
                         'false');
+  l_trim_canvas := nvl(l_trim_canvas,
+                        'true');
   l_image_format := nvl(l_image_format,
                         'false');
 
@@ -63,13 +66,14 @@ BEGIN
   l_clear_btn_selector_esc := sys.htf.escape_sc(l_clear_btn_selector);
   l_save_btn_selector_esc  := sys.htf.escape_sc(l_save_btn_selector);
   l_alert_text_esc         := sys.htf.escape_sc(l_alert_text);
+  																  
   --
   -- add div and canvas for signature pad
   sys.htp.p('<div id="' || l_region_id || '"><canvas id="' || l_canvas_id ||
             '" width="' || l_width || '" height="' || l_height ||
             '" style="border: solid; border-radius: 4px; box-shadow: 0 0 5px rgba(0, 0, 0, 0.02) inset;"></canvas></div>');
   --
-  -- add signaturepad and apexsignature js files
+  -- add signaturepad and apexsignature js files                          
   apex_javascript.add_library(p_name           => l_signaturepad_js,
                               p_directory      => p_plugin.file_prefix ||
                                                   'js/',
@@ -81,7 +85,7 @@ BEGIN
                                                   'js/',
                               p_version        => NULL,
                               p_skip_extension => FALSE);
-  --
+ 
   -- onload code
   apex_javascript.add_onload_code(p_code => 'apexSignature.apexSignatureFnc(' ||
                                             apex_javascript.add_value(p_region.static_id) || '{' ||
@@ -104,7 +108,10 @@ BEGIN
                                             apex_javascript.add_attribute('saveButton',
                                                                           l_save_btn_selector_esc) ||
                                             apex_javascript.add_attribute('emptyAlert',
-                                                                          l_alert_text_esc) ||
+                                                                          l_alert_text_esc) ||	
+                                            apex_javascript.add_attribute('trimCanvas',
+                                                                          l_trim_canvas,
+                                                                          FALSE) ||						  
                                             apex_javascript.add_attribute('showSpinner',
                                                                           l_show_spinner,
                                                                           FALSE) ||
